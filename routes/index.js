@@ -1,13 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const { forwardAuthenticated } = require("../config/auth");
 
-// HomePage
-router.get('/', async (req, res) => {
-    try {
-        res.render('home');
-    } catch(err) {
-        res.status(404).json({message: err});
-    }
-});
+// Welcome Page
+router.get("/", forwardAuthenticated, (req, res) => res.render("welcome"));
 
 module.exports = router;

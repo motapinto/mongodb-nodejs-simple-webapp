@@ -1,2 +1,21 @@
-# mongodb-nodejs-restful
- Learning project using mongodb, nodejs and other technologies
+# Node.js & Passport Login + Simple lists app
+
+This is a user login and registration app using Node.js, Express, Passport, Mongoose, EJS and some other packages. It can also create simple lists/posts and delete them.
+
+### Usage
+
+```sh
+$ npm install
+```
+
+```sh
+$ npm start
+# Or run with Nodemon
+$ npm run dev
+
+# Visit http://localhost:5000
+```
+
+### MongoDB
+
+Open ".env" and add your MongoDB URI, local or Atlas
