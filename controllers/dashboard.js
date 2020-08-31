@@ -5,14 +5,15 @@ async function getUserPosts(req, res) {
   let posts = [];
 
   for (let i = 0; i < req.user.posts.length; i++) {
-    await Post.findById(req.user.posts[i], (err, post) => {
+    try {
+      let post = await Post.findById(req.user.posts[i]);
       posts.push(post);
-    });
+    } catch (err) {
+      console.log(err);
+    }
   }
-  console.log("------------------");
-  console.log(posts);
 
-  res.render("dashboard", {
+  return res.render("dashboard", {
     user: req.user,
     posts: posts,
   });
@@ -21,7 +22,7 @@ async function getUserPosts(req, res) {
 async function postUserPost(req, res) {
   let { title, description } = req.body;
   if (!title || !description) {
-    res.redirect("/dashboard");
+    return res.redirect("/dashboard");
   }
 
   const newPost = new Post({
@@ -30,11 +31,14 @@ async function postUserPost(req, res) {
   });
 
   try {
+    // save post
+    await newPost.save();
+    // save user
     let user = await User.findById(req.user._id);
     user.posts.push(newPost._id);
-    await newPost.save();
     await user.save();
-    res.status(200).redirect("/dashboard");
+
+    return res.status(200).redirect("/dashboard");
   } catch (err) {
     console.log(err);
   }
@@ -50,11 +54,9 @@ async function deleteUserPost(req, res) {
     await User.findOneAndUpdate({ _id: req.user.id }, { posts: posts });
     await Post.findByIdAndDelete(id);
   } catch (error) {
-    res.redirect("/dashboard");
-    //return res.status(500).send({ message: "Post deletion problem" });
+    return res.redirect("/dashboard");
   }
-  //return res.status(200).send({ message: "Post deleted successfully" });
-  res.redirect("/dashboard");
+  return res.redirect("/dashboard");
 }
 
 module.exports = {

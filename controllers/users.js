@@ -5,18 +5,18 @@ const User = require("../models/User");
 // Login page
 async function getUserLogin(req, res) {
   try {
-    res.render("login");
+    return res.render("login");
   } catch (err) {
-    res.status(500).json({ message: err });
+    return res.status(500).json({ message: err });
   }
 }
 
 // Register page
 async function getUserRegister(req, res) {
   try {
-    res.render("register");
+    return res.render("register");
   } catch (err) {
-    res.status(500).json({ message: err });
+    return res.status(500).json({ message: err });
   }
 }
 
@@ -42,7 +42,7 @@ async function postUserRegister(req, res) {
   }
 
   if (errors.length > 0 || (await User.findOne({ email: email }))) {
-    res.render("register", {
+    return res.render("register", {
       errors,
       name,
       email,
@@ -66,9 +66,9 @@ async function postUserRegister(req, res) {
       try {
         await newUser.save();
         req.flash("success_msg", "You are now register and can login");
-        res.status(200).redirect("/users/login");
+        return res.status(200).redirect("/users/login");
       } catch (err) {
-        res.status(500).json({ message: err });
+        return res.status(500).json({ message: err });
       }
     })
   );
@@ -77,7 +77,7 @@ async function postUserRegister(req, res) {
 async function getUserLogout(req, res) {
   req.logout();
   req.flash("success_msg", "You are logged out");
-  res.redirect("/users/login");
+  return res.redirect("/users/login");
 }
 
 module.exports = {
